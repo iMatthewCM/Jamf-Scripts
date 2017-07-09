@@ -66,7 +66,7 @@ do
 
 userPass="$(/usr/bin/osascript -e 'Tell application "System Events" to display dialog "Please enter your login password so that your IT department can add administrative access to the FileVault 2 encryption on this machine:" default answer "" with title "Login Password" with text buttons {"Ok"} default button 1 with hidden answer' -e 'text returned of result')"
 
-authAttempt=$(dscl /Local/Default -authonly $userName $userPass)
+authAttempt=$(dscl /Local/Default -authonly "$userName" "$userPass")
 
 if [ "$authAttempt" == "" ]; then
 	i=3
