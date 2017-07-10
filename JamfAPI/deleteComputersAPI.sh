@@ -27,12 +27,13 @@
 #
 # HISTORY
 #
-#	Version: 1.0
+#	Version: 1.1
 #
 #   Release Notes:
-#   - Initial release
+#   - Style Guide Compatibility
 #
 #	- Created by Matthew Mitchell on June 12, 2017
+#   - Updated by Matthew Mitchell on July 10, 2017 v1.1
 #
 ####################################################################################################
 #
@@ -51,21 +52,21 @@ echo "Please enter your JSS URL"
 echo "On-Prem Example: https://myjss.com:8443"
 echo "Jamf Cloud Example: https://myjss.jamfcloud.com"
 echo "Do NOT use a trailing / !!"
-read jssurl
+read jssURL
 echo ""
 
 #Login Credentials
 echo "Please enter an Adminstrator's username for the JSS:"
-read jssuser
+read jssUser
 echo ""
 
 echo "Please enter the password for your Admin account:"
-read -s jsspass
+read -s jssPass
 echo ""
 
 #CSV file path for devices list - JSS ID numbers only
 echo "Please drag and drop csv into this window and hit enter"
-read devicelist
+read deviceList
 echo ""
 
 ####################################################################################################
@@ -75,7 +76,7 @@ echo ""
 ####################################################################################################
 
 #Read CSV into array
-IFS=$'\n' read -d '' -r -a deviceIDs < $devicelist
+IFS=$'\n' read -d '' -r -a deviceIDs < $deviceList
 
 length=${#deviceIDs[@]}
 
@@ -84,5 +85,5 @@ for ((i=0; i<$length;i++));
 
 do
 	id=$(echo ${deviceIDs[i]} | sed 's/,//g' | sed 's/ //g'| tr -d '\r\n')
-	curl -ksu "$jssuser":"$jsspass" "$jssurl/JSSResource/computers/id/$id" -X DELETE
+	curl -ksu "$jssUser":"$jssPass" "$jssURL/JSSResource/computers/id/$id" -X DELETE
 done

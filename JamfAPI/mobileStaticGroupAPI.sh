@@ -27,12 +27,13 @@
 #
 # HISTORY
 #
-#	Version: 1.0
+#	Version: 1.1
 #
 #   Release Notes:
-#   - Initial release
+#   - Style Guide Compatibility
 #
 #	- Created by Matthew Mitchell on June 26, 2017
+#   - Updated by Matthew Mitchell on July 10, 2017 v1.1
 #
 ####################################################################################################
 # 
@@ -66,7 +67,7 @@ echo ""
 
 #CSV file path for devices list - JSS ID numbers only
 echo "Please drag and drop CSV into this window and hit enter"
-read devicelist
+read deviceList
 echo ""
 
 #Name our static Device group
@@ -74,7 +75,7 @@ echo "What should the group name be? DO NOT USE SPACES!"
 read Name 
 
 #Read CSV into array
-IFS=$'\n' read -d '' -r -a deviceIDs < $devicelist
+IFS=$'\n' read -d '' -r -a deviceIDs < $deviceList
 
 length=${#deviceIDs[@]}
 
@@ -90,8 +91,8 @@ echo >> $outfile "<?xml version=\"1.0\" encoding=\"utf-8\"?><mobile_device_group
 
 for ((i=0; i<$length;i++));
 do
-	deviceid=$(echo "${deviceIDs[$i]}" | sed 's/,//g' | tr -d '\r\n')
-	echo >> $outfile "<mobile_device><id>$deviceid</id></mobile_device>"
+	deviceID=$(echo "${deviceIDs[$i]}" | sed 's/,//g' | tr -d '\r\n')
+	echo >> $outfile "<mobile_device><id>$deviceID</id></mobile_device>"
 	
 done
 

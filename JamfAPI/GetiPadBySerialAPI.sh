@@ -13,7 +13,7 @@
 # ABOUT THIS PROGRAM
 #
 # NAME
-#	GetiPadBySerialAPI.sh - Uses the REST API to look up any enrolled iPad by Serial Number
+#	getiPadBySerialAPI.sh - Uses the REST API to look up any enrolled iPad by Serial Number
 #
 # DESCRIPTION
 #
@@ -31,12 +31,13 @@
 #
 # HISTORY
 #
-#	Version: 1.0
+#	Version: 1.1
 #
 #   Release Notes:
-#   - Initial release
+#   - Style Guide Compatibility
 #
 #	- Created by Matthew Mitchell on March 13, 2017
+#   - Updated by Matthew Mitchell on July 10, 2017 v1.1
 #
 ####################################################################################################
 # 
@@ -49,16 +50,16 @@ echo "Please enter your JSS URL"
 echo "On-Prem Example: https://myjss.com:8443"
 echo "Jamf Cloud Example: https://myjss.jamfcloud.com"
 echo "Do NOT use a trailing / !!"
-read jssurl
+read jssURL
 echo ""
 
 #Login Credentials
 echo "Please enter an Adminstrator's username for the JSS:"
-read jssuser
+read jssUser
 echo ""
 
 echo "Please enter the password for your Admin account:"
-read -s jsspass
+read -s jssPass
 echo ""
 
 #Login Credentials
@@ -68,7 +69,7 @@ echo ""
 
 resourceURL="/JSSResource/mobiledevices/serialnumber/"
 
-output="$(curl "$jssurl$resourceURL$serialNumber" -kvu $jssuser:$jsspass)" 
+output="$(curl "$jssURL$resourceURL$serialNumber" -kvu $jssUser:$jssPass)" 
 
 echo > ~/Desktop/$serialNumber\ Output.txt "$output"
 

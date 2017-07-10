@@ -13,7 +13,7 @@
 # ABOUT THIS PROGRAM
 #
 # NAME
-#	DepartmentsAPI.sh - Adds Departments to JSS via REST API
+#	departmentsAPI.sh - Adds Departments to JSS via REST API
 #
 # DESCRIPTION
 #
@@ -36,13 +36,14 @@
 #
 # HISTORY
 #
-#	Version: 1.3
+#	Version: 1.4
 #
 #   Release Notes:
-#   - Added some additional comments to better explain the script
+#   - Style Guide Compatibility
 #
-#	- Updated by Matthew Mitchell on March 13, 2017 (1.3)
 #	- Created by Matthew Mitchell on December 8, 2016
+#	- Updated by Matthew Mitchell on March 13, 2017 v1.3
+#   - Updated by Matthew Mitchell on July 10, 2017 v1.4
 #
 ####################################################################################################
 # 
@@ -57,10 +58,10 @@ echo "Do NOT use a trailing / !!"
 read jssURL
 
 echo "Please enter Admin credentials the JSS:"
-read apiUser
+read jssUser
 
 echo "Please enter the password for your Admin account:"
-read -s apiPass
+read -s jssPass
 
 echo "Please drag the .txt file with your Departments to add into this window"
 read filePath
@@ -93,7 +94,7 @@ for ((i=0; i<$length;i++));
 			#You can see the XML structure by running a GET on whatever resource you're looking at
 			#The -kvu is just good practice, might as well throw that on all of your statements
 			#Then there's the user and password, then the full URL to the API resource, and then the POST command
-    		curl -H "Content-Type: application/xml" -d "<department><name>$deptName</name></department>" -ksu "$apiUser":"$apiPass" "$jssURL$resourceURL$deptID" -X POST
+    		curl -H "Content-Type: application/xml" -d "<department><name>$deptName</name></department>" -ksu "$jssUser":"$jssPass" "$jssURL$resourceURL$deptID" -X POST
 		fi
 done
 

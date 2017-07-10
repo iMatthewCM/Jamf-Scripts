@@ -13,7 +13,7 @@
 # ABOUT THIS PROGRAM
 #
 # NAME
-#	macStaticGroupAPI.sh - Blurb About Script
+#	macStaticGroupAPI.sh - Creates a Static Computer Group
 #
 # DESCRIPTION
 #
@@ -27,12 +27,13 @@
 #
 # HISTORY
 #
-#	Version: 1.0
+#	Version: 1.1
 #
 #   Release Notes:
-#   - Initial release
+#   - Style Guide Compatibility
 #
 #	- Created by Matthew Mitchell on June 26, 2017
+#   - Updated by Matthew Mitchell on July 10, 2017 v1.1
 #
 ####################################################################################################
 # 
@@ -66,15 +67,15 @@ echo ""
 
 #CSV file path for devices list - JSS ID numbers only
 echo "Please drag and drop CSV into this window and hit enter"
-read devicelist
+read deviceList
 echo ""
 
 #Name our static Device group
 echo "What should the group name be? DO NOT USE SPACES!" 
-read Name 
+read name 
 
 #Read CSV into array
-IFS=$'\n' read -d '' -r -a deviceIDs < $devicelist
+IFS=$'\n' read -d '' -r -a deviceIDs < $deviceList
 
 length=${#deviceIDs[@]}
 
@@ -86,7 +87,7 @@ fi
 outfile="/tmp/macStaticgroupAPI.txt"
 
 #build the xml from the array
-echo >> $outfile "<?xml version=\"1.0\" encoding=\"utf-8\"?><computer_group><name>$Name</name><is_smart>false</is_smart><computers>"
+echo >> $outfile "<?xml version=\"1.0\" encoding=\"utf-8\"?><computer_group><name>$name</name><is_smart>false</is_smart><computers>"
 
 for ((i=0; i<$length;i++));
 do

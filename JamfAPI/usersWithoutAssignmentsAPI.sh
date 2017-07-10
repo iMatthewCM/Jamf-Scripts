@@ -29,12 +29,13 @@
 #
 # HISTORY
 #
-#	Version: 1.0
+#	Version: 1.1
 #
 #   Release Notes:
-#   - Initial Release
+#   - Style Guide Compatibility
 #
 #	- Created by Matthew Mitchell on May 17, 2017
+#   - Updated by Matthew Mitchell on July 10, 2017 v1.1
 #
 ####################################################################################################
 # 
@@ -58,17 +59,17 @@ echo ""
 
 #Login Credentials
 echo "Please enter an Adminstrator's username for the JSS:"
-read apiUser
+read jssUser
 echo ""
 
 echo "Please enter the password for your Admin account:"
-read -s apiPass
+read -s jssPass
 echo ""
 
 echo "Working..."
 
 #Get all User IDs
-listIDs="$(curl $jssURL/JSSResource/users -ksu $apiUser:$apiPass | xpath //users/user/id 2> /dev/null | sed 's/<id>//g' | sed 's/<\/id>/,/g')"
+listIDs="$(curl $jssURL/JSSResource/users -ksu $jssUser:$jssPass | xpath //users/user/id 2> /dev/null | sed 's/<id>//g' | sed 's/<\/id>/,/g')"
 
 #Create an Array based on listIDs
 IFS=', ' read -r -a allIDs <<< "$listIDs"
@@ -94,7 +95,7 @@ do
 	userid=$(echo "${allIDs[$i]}" | sed 's/,//g')
 	
 	#Check the User ID to see if it has anything assigned to it
-	response="$(curl $jssURL/JSSResource/users/id/$userid -ksu $apiUser:$apiPass | xpath //user/links 2> /dev/null)"
+	response="$(curl $jssURL/JSSResource/users/id/$userid -ksu $jssUser:$jssPass | xpath //user/links 2> /dev/null)"
 	
 	if [ "$response" == "$uselessString" ]; then
 		#If this is true, then we'll output the URL to the User in the file so it can be deleted

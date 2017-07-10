@@ -44,13 +44,14 @@
 #
 # HISTORY
 #
-#	Version: 1.1
+#	Version: 1.2
 #
 #   Release Notes:
-#   - Added support for PO Number and PO Date
+#   - Style Guide Compatibility
 #
 #	- Created by Matthew Mitchell on June 28, 2017
-#	- Updated by Matthew Mitchell on July 5, 2017
+#	- Updated by Matthew Mitchell on July 5, 2017 v1.1
+#   - Updated by Matthew Mitchell on July 10, 2017 v1.2
 #
 ####################################################################################################
 # 
@@ -63,55 +64,45 @@ echo "Please enter your JSS URL"
 echo "On-Prem Example: https://myjss.com:8443"
 echo "Jamf Cloud Example: https://myjss.jamfcloud.com"
 echo "Do NOT use a trailing / !!"
-read jssurl
+read jssURL
 echo ""
 
 #Login Credentials
 echo "Please enter an Adminstrator's username for the JSS:"
-read jssuser
+read jssUser
 echo ""
 
 echo "Please enter the password for your Admin account:"
-read -s jsspass
+read -s jssPass
 echo ""
 
 #Path to CSV
 echo "Please drag the CSV into this window and press Enter:"
-read inputcsv
+read inputCSV
 echo ""
 
 echo "Working..."
 
+#API location
 resourceURL="/JSSResource/mobiledevices/serialnumber/"
 
-#Change this to true for additional output if there are errors
-debugging=false
-
 #Read CSV into array
-IFS=$'\n' read -d '' -r -a purchasingInfo < $inputcsv
+IFS=$'\n' read -d '' -r -a purchasingInfo < $inputCSV
 
 length=${#purchasingInfo[@]}
 
 #Loop through the purchasingInfo array
 for ((i=0; i<$length;i++));
 do
-	#Grab Serial, Warranty, and AppleID
+	#Grab Serial, Warranty, AppleID, PO Number, and PO Date
 	serial=$(echo ${purchasingInfo[$i]} | cut -d ',' -f1 | tr -d '\r\n')
 	warranty=$(echo ${purchasingInfo[$i]} | cut -d ',' -f2 | tr -d '\r\n')
 	appleid=$(echo ${purchasingInfo[$i]} | cut -d ',' -f3 | tr -d '\r\n')
 	ponum=$(echo ${purchasingInfo[$i]} | cut -d ',' -f4 | tr -d '\r\n')
 	podate=$(echo ${purchasingInfo[$i]} | cut -d ',' -f5 | tr -d '\r\n')
 	
-	if $debugging; then
-	echo "PUT the following data:"
-	echo "<mobile_device><purchasing><po_number>$ponum</po_number><applecare_id>$appleid</applecare_id><po_date>$podate</po_date><warranty_expires>$warranty</warranty_expires></purchasing></mobile_device>"
-	echo "INTO: $jssurl$resourceURL$serial"
-	echo "WITH: $jssuser:$jsspass"
-	echo "-------------------------------------------------------------"
-	fi
-	
 	#Make the API call
-	curl -H "Content-Type: application/xml" -d "<mobile_device><purchasing><po_number>$ponum</po_number><applecare_id>$appleid</applecare_id><po_date>$podate</po_date><warranty_expires>$warranty</warranty_expires></purchasing></mobile_device>" "$jssurl$resourceURL$serial" -ksu $jssuser:$jsspass -X PUT > /dev/null
+	curl -H "Content-Type: application/xml" -d "<mobile_device><purchasing><po_number>$ponum</po_number><applecare_id>$appleid</applecare_id><po_date>$podate</po_date><warranty_expires>$warranty</warranty_expires></purchasing></mobile_device>" "$jssURL$resourceURL$serial" -ksu $jssUser:$jssPass -X PUT > /dev/null
 done
 
 echo "Done."

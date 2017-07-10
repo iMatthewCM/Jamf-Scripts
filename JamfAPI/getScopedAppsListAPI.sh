@@ -29,12 +29,13 @@
 #
 # HISTORY
 #
-#	Version: 1.0
+#	Version: 1.1
 #
 #   Release Notes:
-#   - Initial release
+#   - Style Guide Compatibility
 #
 #	- Created by Matthew Mitchell on May 4, 2017
+#   - Updated by Matthew Mitchell on July 10, 2017 v1.1
 #
 ####################################################################################################
 # 
@@ -47,14 +48,17 @@ echo "On-Prem Example: https://myjss.com:8443"
 echo "Jamf Cloud Example: https://myjss.jamfcloud.com"
 echo "Do NOT use a trailing / !!"
 read jssURL
+echo ""
 
 echo "Please enter Admin credentials the JSS:"
-read apiUser
+read jssUser
+echo ""
 
 echo "Please enter the password for your Admin account:"
-read -s apiPass
+read -s jssPass
+echo ""
 
-ids=$(curl -H "Content-Type: application/xml" -ksu "$apiUser":"$apiPass" "$jssURL/JSSResource/mobiledeviceapplications" -X GET | xpath //mobile_device_applications/mobile_device_application/id | sed s/'<id>'//g | sed s/'<\/id>'/', '/g)
+ids=$(curl -H "Content-Type: application/xml" -ksu "$jssUser":"$jssPass" "$jssURL/JSSResource/mobiledeviceapplications" -X GET | xpath //mobile_device_applications/mobile_device_application/id | sed s/'<id>'//g | sed s/'<\/id>'/', '/g)
 
 IFS=', ' read -r -a array <<< "$ids"
 
@@ -67,11 +71,11 @@ for ((i=0; i<$length;i++));
 do
 		#Get the contents of the line, and cut it off when we get to a < 
 		currentID=$(echo ${array[$i]})
-		scopeResponse=$(curl -H "Content-Type: application/xml" -ksu "$apiUser":"$apiPass" "$jssURL/JSSResource/mobiledeviceapplications/id/$currentID/subset/Scope" -X GET)
+		scopeResponse=$(curl -H "Content-Type: application/xml" -ksu "$jssUser":"$jssPass" "$jssURL/JSSResource/mobiledeviceapplications/id/$currentID/subset/Scope" -X GET)
 		
 		if [ "$scopeResponse" != "$emptyScopeResponse" ]; then
 			#get the name of the app for currentID
-			nameCurrentID=$(curl -H "Content-Type: application/xml" -ksu "$apiUser":"$apiPass" "$jssURL/JSSResource/mobiledeviceapplications/id/$currentID" -X GET | xpath //mobile_device_application/general/name | sed s/'<name>'//g | sed s/'<\/name>'//g)
+			nameCurrentID=$(curl -H "Content-Type: application/xml" -ksu "$jssUser":"$jssPass" "$jssURL/JSSResource/mobiledeviceapplications/id/$currentID" -X GET | xpath //mobile_device_application/general/name | sed s/'<name>'//g | sed s/'<\/name>'//g)
 			echo $nameCurrentID >> ~/Desktop/appsBeingScoped.txt
 		fi
 done
