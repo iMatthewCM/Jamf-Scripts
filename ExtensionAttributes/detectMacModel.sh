@@ -10,26 +10,6 @@
 #
 ####################################################################################################
 #
-# ABOUT THIS PROGRAM
-#
-# NAME
-#	detectMacModel.sh - Better detection for Mac model identifiers
-#
-# DESCRIPTION
-#
-#	This script, when used in an Extension Attribute, will return the Mac Model information
-#	in the following format: MacBook Pro (Retina, 13-inch, Early 2015)
-#
-#	Once this information is correctly populated in the JSS Inventory, you can make Smart Groups
-#	and other scoping decisions based off of this.
-#
-# REQUIREMENTS
-#
-#   This script will need to be put into an Extension Attribute. An internet connection is required
-#	as this script makes two calls to Apple's servers.
-#
-####################################################################################################
-#
 # HISTORY
 #
 #	Version: 1.0

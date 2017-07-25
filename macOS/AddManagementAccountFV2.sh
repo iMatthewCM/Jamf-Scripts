@@ -13,7 +13,7 @@
 # ABOUT THIS PROGRAM
 #
 # NAME
-#	AddManagementAccountFV2.sh - Adds the Management Account to an already-encrypted FileVault 2 setup
+#	addManagementAccountFV2.sh - Adds the Management Account to an already-encrypted FileVault 2 setup
 #
 # DESCRIPTION
 #
