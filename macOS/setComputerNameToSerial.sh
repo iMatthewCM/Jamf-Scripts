@@ -24,13 +24,24 @@
 #
 # HISTORY
 #
-#	Version: 1.0
+#	Version: 1.1
 #
 #   Release Notes:
-#   - Initial release
+#   - Added support for an optional prefix
 #
 #	- Created by Matthew Mitchell on March 10, 2017
+#   - Updated by Matthew Mitchell on August 1, 2017 v1.1
 #
+####################################################################################################
+#
+# DEFINE VARIABLES & READ IN PARAMETERS
+#
+####################################################################################################
+
+#Leave this blank to just set the name to the serial number
+#Do not include a hyphen at the end, one will be added automatically
+prefix="WM"
+
 ####################################################################################################
 # 
 # SCRIPT CONTENTS - DO NOT MODIFY BELOW THIS LINE
@@ -43,8 +54,17 @@ serialOutput=$(system_profiler SPHardwareDataType | grep Serial)
 #Make it pretty
 serialNumber=$(echo $serialOutput | cut -d\  -f4)
 
-#Set ComputerName to the pretty output
-sudo scutil --set ComputerName $serialNumber
+#Check and see if we're using a Prefix
+if [[ "$prefix" != "" ]]; then
+	newName="$prefix-$serialNumber"
+else
+	newName=$serialNumber
+fi
 
-#Update Inventory to reflect 
+#Set Computer name to the output
+/usr/sbin/scutil --set ComputerName $newName
+/usr/sbin/scutil --set HostName $newName
+/usr/sbin/scutil --set LocalHostName $newName
+
+#Update Inventory to reflect the new name
 sudo jamf recon
