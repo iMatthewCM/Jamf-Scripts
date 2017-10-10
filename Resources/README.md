@@ -9,3 +9,5 @@ Contents:
 * cacert.pem
 
 Both files are from Duo's GitHub page for EFIgy: [https://github.com/duo-labs/EFIgy](https://github.com/duo-labs/EFIgy)
+
+[EFIgy License](https://github.com/duo-labs/EFIgy/blob/master/LICENSE)
