@@ -22,8 +22,10 @@
 #
 # REQUIREMENTS
 #
-#   This script needs to be deployed with a package that contains the EFIgy script and .pem file
-#	as well as configuring variables for EA updates
+#   This script needs to be deployed with a package that installs the EFIgy python script and .pem file
+#	to the /tmp/EFIgy directory, as well as an Extension Attribute in the JSS to write to. The script
+#	needs to have a Priority of After. The EA needs to utilize Text Field as an Input Type, and String
+#	as a Data Type.
 #
 ####################################################################################################
 #
