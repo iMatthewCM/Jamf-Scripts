@@ -71,31 +71,46 @@ eaName=$7
 #
 ####################################################################################################
 
+#Remove existing directory to ensure we don't have extra data later on
 rm -rf /tmp/EFIgy/log
 
+#Make a brand new directory with nothing in it
 mkdir /tmp/EFIgy/log
 
+#Run the EFIgy script and write a log to /tmp/EFIgy/log
 python /tmp/EFIgy/EFIgyLite_cli.py -q -l /tmp/EFIgy/log
 
+#List out the contents of the .../log directory
+#Since we just remade a brand new one, the latest log is the only thing that should be in there.
+#The logName gets an epoch timestamp in the name, so we can't count on what it will be called
 logName=$(ls /tmp/EFIgy/log)
 
+#Variable for later, complete path with log name
 logPath=/tmp/EFIgy/log/$logName
 
+#These two lines get the line number that the "Success" or "Attention" message will be on
 statusLineNum=`cat $logPath | grep -n "EFI firmware version" | awk -F : '{print $1}'`
 statusLineNum=$(expr $statusLineNum + 1)
 
+#Get a copy of the "Success / Attention" line
 efiStatus=`head -n $statusLineNum $logPath | tail -n 1`
 
+#Parse out that line to see if it says "Success" or "Attention"
 firmwareLogOutput=$(echo $efiStatus | cut -d ']' -f2 | cut -d '-' -f1 | sed 's/ //g')
 
+#If it said Success
 if [ "$firmwareLogOutput" == "SUCCESS" ]; then
+	#Firmware is valid
 	value="True"
 else
+	#Firmware is invalid
 	value="False"
 fi
 
+#Set up a path to write to
 xmlPath='/tmp/tmp.xml'
 
+#Get serial number of current computer
 serial=`system_profiler SPHardwareDataType | awk '/Serial/ {print $4}'`
  
 #Create our XML file for API PUT
@@ -113,9 +128,10 @@ cat <<EndXML > $xmlPath
 </computer>
 EndXML
 
+#Get the JSS URL that this computer is enrolled in
 url=$(defaults read /Library/Preferences/com.jamfsoftware.jamf jss_url | grep https:// | sed 's/.$//')
  
-#Post XML file to JSS
+#Post XML file to JSS, updates the EA
 curl -sk -u $apiUser:$apiPass $url/JSSResource/computers/serialnumber/"${serial}"/subset/extensionattributes -T $xmlPath -X PUT
  
 #Clean up temp files
