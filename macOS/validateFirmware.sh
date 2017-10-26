@@ -31,12 +31,13 @@
 #
 # HISTORY
 #
-#	Version: 1.0
+#	Version: 1.1
 #
 #   Release Notes:
-#   - Initial release
+#   - Fails gracefully if EFIgy does not download correctly during the Policy
 #
 #	- Created by Matthew Mitchell on October 9, 2017
+#   - Updated by Matthew Mitchell on October 26, 2017
 #
 ####################################################################################################
 #
@@ -71,68 +72,61 @@ eaName=$7
 #
 ####################################################################################################
 
+#Path to the main EFIgy directory we will create
+efigyDirectory=/tmp/EFIgy
+
+#Path to the log directory within the efigyDirectory
+logDirectory=$efigyDirectory/log
+
 #Remove existing directory to ensure we don't have extra data later on
-rm -rf /tmp/EFIgy/log
+rm -rf $logDirectory
 
 #Make a brand new directory with nothing in it
-mkdir /tmp/EFIgy/log
+mkdir $logDirectory
 
-#Run the EFIgy script and write a log to /tmp/EFIgy/log
-python /tmp/EFIgy/EFIgyLite_cli.py -q -l /tmp/EFIgy/log
+#Check to make sure EFIgy is in place
+if [ -e /tmp/EFIgy/EFIgyLite_cli.py ]; then
 
-#List out the contents of the .../log directory
-#Since we just remade a brand new one, the latest log is the only thing that should be in there.
-#The logName gets an epoch timestamp in the name, so we can't count on what it will be called
-logName=$(ls /tmp/EFIgy/log)
+	#Run the EFIgy script and write a log to /tmp/EFIgy/log
+	python /tmp/EFIgy/EFIgyLite_cli.py -q -l $logDirectory
 
-#Variable for later, complete path with log name
-logPath=/tmp/EFIgy/log/$logName
+	#List out the contents of the .../log directory
+	#Since we just remade a brand new one, the latest log is the only thing that should be in there.
+	#The logName gets an epoch timestamp in the name, so we can't count on what it will be called
+	logName=$(ls $logDirectory)
 
-#These two lines get the line number that the "Success" or "Attention" message will be on
-statusLineNum=`cat $logPath | grep -n "EFI firmware version" | awk -F : '{print $1}'`
-statusLineNum=$(expr $statusLineNum + 1)
+	#Variable for later, complete path with log name
+	logPath=$logDirectory/$logName
 
-#Get a copy of the "Success / Attention" line
-efiStatus=`head -n $statusLineNum $logPath | tail -n 1`
+	#These two lines get the line number that the "Success" or "Attention" message will be on
+	statusLineNum=`cat $logPath | grep -n "EFI firmware version" | awk -F : '{print $1}'`
+	statusLineNum=$(expr $statusLineNum + 1)
 
-#Parse out that line to see if it says "Success" or "Attention"
-firmwareLogOutput=$(echo $efiStatus | cut -d ']' -f2 | cut -d '-' -f1 | sed 's/ //g')
+	#Get a copy of the "Success / Attention" line
+	efiStatus=`head -n $statusLineNum $logPath | tail -n 1`
 
-#If it said Success
-if [ "$firmwareLogOutput" == "SUCCESS" ]; then
-	#Firmware is valid
-	value="True"
+	#Parse out that line to see if it says "Success" or "Attention"
+	firmwareLogOutput=$(echo $efiStatus | cut -d ']' -f2 | cut -d '-' -f1 | sed 's/ //g')
+
+	#If it said Success
+	if [ "$firmwareLogOutput" == "SUCCESS" ]; then
+		#Firmware is valid
+		value="True"
+	else
+		#Firmware is invalid
+		value="False"
+	fi
+
+	#Get serial number of current computer
+	serial=`system_profiler SPHardwareDataType | awk '/Serial/ {print $4}'`
+
+	#Get the JSS URL that this computer is enrolled in
+	url=$(defaults read /Library/Preferences/com.jamfsoftware.jamf jss_url | grep https:// | sed 's/.$//')
+	 
+	#Post XML file to JSS, updates the EA
+	curl -H "Content-Type: application/xml" -d "<computer><extension_attributes><extension_attribute><id>$eaID</id><name>$eaName</name><type>String</type><value>$value</value></extension_attribute></extension_attributes></computer>" -ksu "$apiUser":"$apiPass" "$url/JSSResource/computers/serialnumber/$serial/subset/extensionattributes" -X PUT
+	
 else
-	#Firmware is invalid
-	value="False"
+	#EFIgy package probably didn't come down, so don't try and do anything 
+	echo "EFIgy was not found at $efigyDirectory. Please ensure the package download was successful and try again."
 fi
-
-#Set up a path to write to
-xmlPath='/tmp/tmp.xml'
-
-#Get serial number of current computer
-serial=`system_profiler SPHardwareDataType | awk '/Serial/ {print $4}'`
- 
-#Create our XML file for API PUT
-cat <<EndXML > $xmlPath
-<?xml version="1.0" encoding="UTF-8"?>
-<computer>
-	<extension_attributes>
-		<extension_attribute>
-			<id>$eaID</id>
-			<name>$eaName</name>
-			<type>String</type>
-			<value>$value</value>
-		</extension_attribute>
-	</extension_attributes>
-</computer>
-EndXML
-
-#Get the JSS URL that this computer is enrolled in
-url=$(defaults read /Library/Preferences/com.jamfsoftware.jamf jss_url | grep https:// | sed 's/.$//')
- 
-#Post XML file to JSS, updates the EA
-curl -sk -u $apiUser:$apiPass $url/JSSResource/computers/serialnumber/"${serial}"/subset/extensionattributes -T $xmlPath -X PUT
- 
-#Clean up temp files
-rm -rf $xmlPath
