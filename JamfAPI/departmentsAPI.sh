@@ -64,7 +64,7 @@ echo "Please enter the password for your Admin account:"
 read -s jssPass
 
 echo "Please drag the .txt file with your Departments to add into this window"
-filePath=/Users/Matthew/Desktop/test.txt
+read filePath
 
 #Location of the Department API - you can get this from https://YOUR_JSS_URL/api, clicking on a command, "Try it out," and reference "Request URL"
 resourceURL="/JSSResource/departments/id/"
