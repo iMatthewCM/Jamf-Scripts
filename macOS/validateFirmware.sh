@@ -31,13 +31,14 @@
 #
 # HISTORY
 #
-#	Version: 1.1
+#	Version: 1.2
 #
 #   Release Notes:
-#   - Fails gracefully if EFIgy does not download correctly during the Policy
+#   - Workaround to circumvent a problem with how EFIgy reports firmware after the High Sierra update
 #
 #	- Created by Matthew Mitchell on October 9, 2017
-#   - Updated by Matthew Mitchell on October 26, 2017
+#   - Updated by Matthew Mitchell on October 26, 2017 (version 1.1)
+#   - Updated by Matthew Mitchell on December 19, 2017 (version 1.2)
 #
 ####################################################################################################
 #
@@ -93,6 +94,7 @@ if [ -e /tmp/EFIgy/EFIgyLite_cli.py ]; then
 	#List out the contents of the .../log directory
 	#Since we just remade a brand new one, the latest log is the only thing that should be in there.
 	#The logName gets an epoch timestamp in the name, so we can't count on what it will be called
+	
 	logName=$(ls $logDirectory)
 
 	#Variable for later, complete path with log name
@@ -110,11 +112,36 @@ if [ -e /tmp/EFIgy/EFIgyLite_cli.py ]; then
 
 	#If it said Success
 	if [ "$firmwareLogOutput" == "SUCCESS" ]; then
+		
 		#Firmware is valid
 		value="True"
+		
 	else
-		#Firmware is invalid
-		value="False"
+		
+		#Firmware MIGHT be invalid - EFIgy Bug, documented as Issue 17 on EFIgy GitHub
+		
+		#Cut the current firmware out of the string
+		#Hack off the last character (a comma)
+		#Swap out MBP for MBPro
+		currentFirmware=$(echo $efiStatus | cut -d\  -f28 | sed 's/.$//' | sed 's/MBP/MBPro/')
+		
+		#Cut the expected firmware out of the string
+		#Hack off the last character (a period)
+		expectedFirmware=$(echo $efiStatus | cut -d\  -f36 | sed 's/.$//')
+		
+		#Compare the real firmware values
+		if [ "$currentFirmware" == "$expectedFirmware" ]; then
+			
+			#Firmware is valid after all
+			value="True"
+			
+		else
+			
+			#Firmware is indeed invalid
+			value="False"
+			
+		fi
+
 	fi
 
 	#Get serial number of current computer
