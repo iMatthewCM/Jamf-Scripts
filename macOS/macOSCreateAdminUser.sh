@@ -23,14 +23,14 @@
 #
 # HISTORY
 #
-#	Version: 1.1
+#	Version: 1.2
 #
 #   Release Notes:
-#   - Added a variable to set an alternative Home directory
-#	- Fixed a bug where special characters in a password could cause script to fail
+#   - Fixed an error in the confirmation message output
 #
 #	Created by Matthew Mitchell on February 7, 2017
-#	Updated by Matthew Mitchell on February 8, 2017 (Version 1.1)
+#	- Updated by Matthew Mitchell on February 8, 2017 (Version 1.1)
+#   - Updated by Matthew Mitchell on January 17, 2018 (Version 1.2)
 #
 ####################################################################################################
 #
@@ -91,9 +91,7 @@ Account Full Name........ $macOSfullname
 Account Unique ID........ $macOSuid
 Account Home Directory... $macOShome/$macOSuser
 
-Please make a note of this information. 
-You will need the Username and Password for both accounts 
-to configure the File Share Distribution Point in the JSS.
+Please make a note of this information.
 
 When this script is finished, your computer will RESTART AUTOMATICALLY.
 "
