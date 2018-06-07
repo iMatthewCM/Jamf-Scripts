@@ -24,13 +24,14 @@
 #
 # HISTORY
 #
-#	Version: 1.1
+#	Version: 1.2
 #
 #   Release Notes:
-#   - Added support for an optional prefix
+#   - New one-liner approach to collecting the serial number
 #
 #	- Created by Matthew Mitchell on March 10, 2017
 #   - Updated by Matthew Mitchell on August 1, 2017 v1.1
+#   - Updated by Matthew Mitchell on June 7, 2018 v1.2
 #
 ####################################################################################################
 #
@@ -49,10 +50,7 @@ prefix="WM"
 ####################################################################################################
 
 #Get the Serial Number for the computer
-serialOutput=$(system_profiler SPHardwareDataType | grep Serial)
-
-#Make it pretty
-serialNumber=$(echo $serialOutput | cut -d\  -f4)
+serialNumber=$(system_profiler SPHardwareDataType | grep Serial | awk '{print $4}')
 
 #Check and see if we're using a Prefix
 if [[ "$prefix" != "" ]]; then

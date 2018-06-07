@@ -27,13 +27,14 @@
 #
 # HISTORY
 #
-#	Version: 1.1
+#	Version: 1.2
 #
 #   Release Notes:
-#   - Style Guide Compatibility
+#   - Fixed a bug with how XML was being written that wasn't compatible with the Jamf API
 #
 #	- Created by Matthew Mitchell on June 26, 2017
 #   - Updated by Matthew Mitchell on July 10, 2017 v1.1
+#   - Updated by Matthew Mitchell on June 7, 2018 v1.2
 #
 ####################################################################################################
 # 
@@ -96,7 +97,7 @@ do
 	
 done
 
-echo >> $outfile "</computers></computer_groups>"
+echo >> $outfile "</computers></computer_group>"
 
 #post the XML file to the JSS
 curl -ksu $jssUser:$jssPass -H "Content-type: text/xml" $jssURL/JSSResource/computergroups/id/0 -X POST -T $outfile > /dev/null

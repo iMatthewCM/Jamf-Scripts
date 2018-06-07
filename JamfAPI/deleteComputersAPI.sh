@@ -27,13 +27,14 @@
 #
 # HISTORY
 #
-#	Version: 1.1
+#	Version: 1.2
 #
 #   Release Notes:
-#   - Style Guide Compatibility
+#   - Optimized API calls
 #
 #	- Created by Matthew Mitchell on June 12, 2017
 #   - Updated by Matthew Mitchell on July 10, 2017 v1.1
+#   - Updated by Matthew Mitchell on June 7, 2018 v1.2
 #
 ####################################################################################################
 #
@@ -85,5 +86,5 @@ for ((i=0; i<$length;i++));
 
 do
 	id=$(echo ${deviceIDs[i]} | sed 's/,//g' | sed 's/ //g'| tr -d '\r\n')
-	curl -ksu "$jssUser":"$jssPass" "$jssURL/JSSResource/computers/id/$id" -X DELETE
+	curl -ksu "$jssUser":"$jssPass" "$jssURL/JSSResource/computers/serialnumber/$id" -X DELETE
 done
