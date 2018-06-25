@@ -41,7 +41,7 @@
 
 #Leave this blank to just set the name to the serial number
 #Do not include a hyphen at the end, one will be added automatically
-prefix="WM"
+prefix=""
 
 ####################################################################################################
 # 
