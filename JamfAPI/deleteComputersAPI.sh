@@ -86,5 +86,5 @@ for ((i=0; i<$length;i++));
 
 do
 	id=$(echo ${deviceIDs[i]} | sed 's/,//g' | sed 's/ //g'| tr -d '\r\n')
-	curl -ksu "$jssUser":"$jssPass" "$jssURL/JSSResource/computers/serialnumber/$id" -X DELETE
+	curl -ksu "$jssUser":"$jssPass" "$jssURL/JSSResource/computers/id/$id" -X DELETE
 done
