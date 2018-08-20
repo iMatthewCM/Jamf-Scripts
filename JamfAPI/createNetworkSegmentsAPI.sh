@@ -115,6 +115,6 @@ do
 	
 	fi
 	
-	curl -H "Content-Type: application/xml" -d "<network_segment><name>$segmentName</name><starting_address>$startingIP</starting_address><ending_address>$endingIP</ending_address><distribution_point>$distroPoint</distribution_point><building>$building</building><department>$department</department><override_buildings>$overrideBuildings</override_buildings><override_departments>$overrideDeparments</override_departments></network_segment>" -ksu "$jssUser":"$jssPass" "$jssURL/JSSResource/networksegments/id/0"  -X POST
+	curl -H "Content-Type: text/xml" -d "<network_segment><name>$segmentName</name><starting_address>$startingIP</starting_address><ending_address>$endingIP</ending_address><distribution_point>$distroPoint</distribution_point><building>$building</building><department>$department</department><override_buildings>$overrideBuildings</override_buildings><override_departments>$overrideDeparments</override_departments></network_segment>" -ksu "$jssUser":"$jssPass" "$jssURL/JSSResource/networksegments/id/0"  -X POST
 	
 done
