@@ -24,14 +24,15 @@
 #
 # HISTORY
 #
-#	Version: 1.2
+#	Version: 1.3
 #
 #   Release Notes:
-#   - New one-liner approach to collecting the serial number
+#   - No more grep to awk! Who hired that guy?
 #
 #	- Created by Matthew Mitchell on March 10, 2017
 #   - Updated by Matthew Mitchell on August 1, 2017 v1.1
 #   - Updated by Matthew Mitchell on June 7, 2018 v1.2
+#   - Updated by Matthew Mitchell on October 4, 2018 v1.3
 #
 ####################################################################################################
 #
@@ -50,7 +51,7 @@ prefix=""
 ####################################################################################################
 
 #Get the Serial Number for the computer
-serialNumber=$(system_profiler SPHardwareDataType | grep Serial | awk '{print $4}')
+serialNumber=$(system_profiler SPHardwareDataType | awk '/Serial/ {print $4}')
 
 #Check and see if we're using a Prefix
 if [[ "$prefix" != "" ]]; then
