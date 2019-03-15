@@ -58,12 +58,7 @@ echo "Please enter the password for $jssUser's account:"
 read -s jssPass
 echo ""
 
-#Site Name
-echo "Please enter the name of the site to delete ALL classes from:"
-read siteName
-echo ""
-
-echo "Deleting all classes from $siteName..."
+echo "Deleting all classes..."
 echo ""
 
 #Location of the Classes API
@@ -81,15 +76,10 @@ for ((i=0; i<$length;i++));
 do
 	#Get the ID of the class we're looking at
 	currentID=$(echo ${allIDs[$i]})
-	
-	#Get the name of the site assigned to the class
-	site=$(curl -H "Content-Type: application/xml" -ksu "$jssUser":"$jssPass" "$jssURL$resourceURL/id/$currentID" -X GET | xpath //class/site/name 2> /dev/null | sed s/'<name>'//g | sed s/'<\/name>'/''/g)
-	
-	#If the site name is the same as what was entered by the user, delete it
-	if [ "$site" == "$siteName" ]; then
-		curl -ksu "$jssUser":"$jssPass" "$jssURL$resourceURL/id/$currentID" -X DELETE
-	fi
-	
+
+	#Delete the ID we are looking ats
+	curl -ksu "$jssUser":"$jssPass" "$jssURL$resourceURL/id/$currentID" -X DELETE
+
 done
 
 echo ""
