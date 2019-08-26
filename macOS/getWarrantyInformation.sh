@@ -67,7 +67,7 @@ PASSPHRASE="enter value here"
 JAMF_PRO_URL="https://myjss.jamfcloud.com"
 
 #Username for the API call
-#This user only needs permissions to UPDATE Computer and User objects, and should be entered in clear text
+#This user only needs permissions to UPDATE Computer and User objects, and should be entered here in clear text
 API_USERNAME="warrantyAPIuser"
 
 #The Jamf Pro Object ID of the EA we're going to update
@@ -97,13 +97,14 @@ output=$(echo $output | cut -d ':' -f5 | awk '{print $1}')
 #Tack on a timestamp for 11:59pm to format the value as a date
 output+=" 23:59:59"
 
-#Decrypt the password so we can make our API call
+#Function for decrypting the password
 function DecryptString() {
 	# Usage: ~$ DecryptString "Encrypted String" "Salt" "Passphrase"
 	echo "${1}" | /usr/bin/openssl enc -aes256 -d -a -A -S "${2}" -k "${3}"
 }
 
-DecryptString "$4" "$SALT" "$PASSPHRASE"
+#Decrypt the password so we can make our API call
+API_PASSWORD="$(DecryptString "$4" "$SALT" "$PASSPHRASE")"
 
 #Make the API call
 curl -H "Content-Type: text/xml" -d "<computer><extension_attributes><extension_attribute><id>$WARRANTY_EA_ID</id><name>$WARRANTY_EA_NAME</name><type>Date</type><value>$output</value></extension_attribute></extension_attributes></computer>" -ksu "$API_USERNAME":"$API_PASSWORD" "$JAMF_PRO_URL/JSSResource/computers/serialnumber/$serial/subset/extensionattributes" -X PUT
