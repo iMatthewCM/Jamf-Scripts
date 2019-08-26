@@ -25,12 +25,7 @@
 # REQUIREMENTS
 #
 #	A comprehensive walkthrough for properly configuring this script is available:
-#
-#   This script needs to be deployed in a Policy. The Warranty_Script.pkg must be a part of the same Policy.
-#    Add the Script payload to the Policy, add this script, and set the priority to AFTER so that the PKG installs first
-#
-#    The API call requires Jamf Pro credentials. Do not use the Admin account for this. Create a new
-#    account if necessary and only give it UPDATE permission on Computer and User objects.
+#	https://github.com/iMatthewCM/Jamf-Scripts/blob/master/Workflows/Warranty%20Reporting.pdf
 #
 ####################################################################################################
 #
