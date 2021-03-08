@@ -3,21 +3,21 @@
 #############################################
 #	 Created by iMatthewCM on 03/08/2021	#
 #################################################################################################
-# This script is not an official product of Jamf Software LLC. As such, it is provided without  #
-# warranty or support. By using this script, you agree that Jamf Software LLC is under no 		#
-# obligation to support, debug, or otherwise maintain this script. Licensed under MIT.			#
-#																								#
-# NAME: hasEscrowedBootstrapToken.sh															#
-# DESCRIPTION: This script is to be used in an Extension Attribute in Jamf Pro. It will detect  #
-# if a Bootstrap token has been escrowed, which is required for (amongst other things) 			#
-# approving legacy kernel extensions on M1 Macs. 												#
-#																								#
-# POSSIBLE RETURN VALUES:																		#
-# Not Supported																					#
-# Yes																							#
-# No																							#
-#																								#
-# (Yes if a token is escrowed, No if it's not, Not Supported if the Mac isn't supervised		#
+# This script is not an official product of Jamf Software LLC. As such, it is provided without  
+# warranty or support. By using this script, you agree that Jamf Software LLC is under no 		
+# obligation to support, debug, or otherwise maintain this script. Licensed under MIT.			
+#																								
+# NAME: hasEscrowedBootstrapToken.sh															
+# DESCRIPTION: This script is to be used in an Extension Attribute in Jamf Pro. It will detect  
+# if a Bootstrap token has been escrowed, which is required for (amongst other things) 			
+# approving legacy kernel extensions on M1 Macs. 												
+#																								
+# POSSIBLE RETURN VALUES:																		
+# Not Supported																					
+# Yes																							
+# No																							
+#																								
+# (Yes if a token is escrowed, No if it's not, Not Supported if the Mac isn't supervised		
 #################################################################################################
 
 #Get the status of the bootstrap token
