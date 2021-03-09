@@ -86,7 +86,7 @@ do
 	iValuePlusOne=$((i+1))
 	
 	#Get the name of the computer associated to this computer ID
-	computerName=$(echo "$allComputers" | /usr/bin/xmllint --xpath '/computers/computer'[$iValuePlusOne]'/name/text()' -)
+	computerName=$(echo "$allComputers" | /usr/bin/xmllint --xpath "string(/computers/computer[$iValuePlusOne]/name)" -)
 	
 	#Write that name out to the temporary CSV
 	echo "$computerName,">> "$TEMP_CSV_PATH"
