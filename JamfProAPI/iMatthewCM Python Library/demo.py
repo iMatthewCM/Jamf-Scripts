@@ -1,5 +1,6 @@
 import iMatthewCM
 import creds
+#creds is just a file that has some variables set, to take them out of this script
 
 
 #Print documentation for iMatthewCM library
