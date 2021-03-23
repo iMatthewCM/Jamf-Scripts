@@ -9,4 +9,4 @@ ehthumbs.db
 Thumbs.db
 
 HoldingArea
-_pycache_
+**/__pycache__
