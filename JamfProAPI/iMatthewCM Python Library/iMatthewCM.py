@@ -26,6 +26,11 @@ def postData(server: str, endpoint: str, token: str, data: str):
 	return response.status_code,response.json()
 
 
+def putData(server: str, endpoint: str, token: str, data: str):
+	headers = {'Authorization': "Bearer " + token, 'Content-Type': 'application/json'}
+	response = requests.put(server + endpoint, headers=headers, data=json.dumps(data))	
+	return response.status_code,response.json()
+
 def help():
 	print('''
 getToken(server, username, password)
@@ -59,5 +64,15 @@ Notes: The data parameter is expecting formatted JSON. Create your data in a var
 	data = {
 		"name": "A New Building",
 		"country": "USA"
+	}
+
+putData(server, endpoint, token, data)
+Purpose: perform a PUT operation on any given endpoint
+Returns: HTTP response code and JSON response body
+Usage: response = iMatthewCM.putData('https://JAMF_PRO_URL', '/api/v1/buildings/10', token, data)
+Notes: The data parameter is expecting formatted JSON. Create your data in a variable, and pass the variable to the function.
+	Example:
+	data = {
+		"name": "A Building Name to Change"
 	}
 	''')
