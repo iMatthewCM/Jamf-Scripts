@@ -31,6 +31,7 @@ def putData(server: str, endpoint: str, token: str, data: str):
 	response = requests.put(server + endpoint, headers=headers, data=json.dumps(data))	
 	return response.status_code,response.json()
 
+
 def help():
 	print('''
 getToken(server, username, password)
