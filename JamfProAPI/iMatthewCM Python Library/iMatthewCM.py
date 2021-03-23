@@ -34,6 +34,11 @@ def putData(server: str, endpoint: str, token: str, data: str):
 
 def help():
 	print('''
+iMatthewCM Python Library
+(c) 2021
+Version 0.2.1
+https://github.com/iMatthewCM/Jamf-Scripts/
+
 getToken(server, username, password)
 Purpose: obtain an authorization token for the Jamf Pro API
 Returns: String
