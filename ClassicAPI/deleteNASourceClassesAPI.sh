@@ -46,13 +46,13 @@
 
 #Do NOT use a trailing / character!
 #Include ports as necessary
-jamfProURL="https://teamvorp.jamfcloud.com"
+jamfProURL=""
 
 #Jamf Pro User Account Username
-jamfProUSER="MMitchell"
+jamfProUSER=""
 
 #Jamf Pro User Account Password
-jamfProPASS="Jerry Park59"
+jamfProPASS=""
 
 if [[ "$jamfProURL" == "" ]]; then
 	echo "Please enter your Jamf Pro URL"
