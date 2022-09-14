@@ -28,12 +28,13 @@
 #
 # HISTORY
 #
-#	Version: 1.0
+#	Version: 1.1
 #
 #   Release Notes:
-#   - Initial release
+#   - Update xpath expressions to run through xmllint
 #
 #	- Created by Matthew Mitchell on September 13, 2018
+#	- Updated by Matthew Mitchell on September 14, 2022
 #
 ####################################################################################################
 #
@@ -41,26 +42,38 @@
 #
 ####################################################################################################
 
-#Enter in the URL of the JSS we are are pulling and pushing the data to. 
-echo "Please enter your JSS URL"
-echo "On-Prem Example: https://myjss.com:8443"
-echo "Jamf Cloud Example: https://myjss.jamfcloud.com"
-read jssURL
-echo ""
+#It's OK to leave these variables empty! The script will prompt for any empty fields.
 
-#Trim the trailing slash off if necessary
-if [ $(echo "${jssURL: -1}") == "/" ]; then
-	jssURL=$(echo $jssURL | sed 's/.$//')
+#Do NOT use a trailing / character!
+#Include ports as necessary
+jamfProURL="https://teamvorp.jamfcloud.com"
+
+#Jamf Pro User Account Username
+jamfProUSER="MMitchell"
+
+#Jamf Pro User Account Password
+jamfProPASS="Jerry Park59"
+
+if [[ "$jamfProURL" == "" ]]; then
+	echo "Please enter your Jamf Pro URL"
+	echo "Do not include a trailing /"
+	echo "Example: https://myjss.jamfcloud.com"
+	read jamfProURL
+	echo ""
 fi
 
-#Login Credentials
-echo "Please enter an Adminstrator's username for the JSS:"
-read jssUser
-echo ""
+if [[ "$jamfProUSER" == "" ]]; then
+	echo "Please enter your Jamf Pro username"
+	read jamfProUSER
+	echo ""
+fi
 
-echo "Please enter the password for $jssUser's account:"
-read -s jssPass
-echo ""
+if [[ "$jamfProPASS" == "" ]]; then
+	echo "Please enter the password for $jamfProUSER's account"
+	read -s jamfProPASS
+	echo ""
+fi
+
 
 ####################################################################################################
 # 
@@ -74,7 +87,7 @@ echo "Working...please wait"
 echo ""
 
 #Get a all of the IDs we need to delete
-ids=$(curl -H "Content-Type: application/xml" -ksu "$jssUser":"$jssPass" "$jssURL$resourceURL" -X GET | xpath //classes/class/id  2> /dev/null | sed s/'<id>'//g | sed s/'<\/id>'/','/g)
+ids=$(curl -H "accept: text/xml" -su "$jamfProUSER":"$jamfProPASS" "$jamfProURL$resourceURL" -X GET | xmllint --xpath //classes/class/id - 2> /dev/null | sed s/'<id>'//g | sed s/'<\/id>'/','/g)
 
 #Make that into an array
 IFS=', ' read -r -a allIDs <<< $ids
@@ -92,7 +105,7 @@ do
 	currentID=$(echo ${allIDs[$i]})
 	
 	#Get the value of the Source of the class
-	sourceValue=$(curl -H "Content-Type: application/xml" -ksu "$jssUser":"$jssPass" "$jssURL$resourceURL/id/$currentID" -X GET | xpath //class/source 2> /dev/null | sed s/'<source>'//g | sed s/'<\/source>'/''/g)
+	sourceValue=$(curl -H "accept: text/xml" -su "$jamfProUSER":"$jamfProPASS" "$jamfProURL$resourceURL/id/$currentID" -X GET | xmllint --xpath //class/source - 2> /dev/null | sed s/'<source>'//g | sed s/'<\/source>'/''/g)
 	
 	#If the Source is N/A...
 	if [ "$sourceValue" == "N/A" ]; then
@@ -116,6 +129,6 @@ echo "Deleting Source N/A classes..."
 echo ""
 
 #Delete all of the things
-curl -H "Accept: text/xml" -ksu $jssUser:$jssPass "$jssURL$resourceURL/id/$idsToDelete" -X DELETE > /dev/null
+curl -su "$jamfProUSER":"$jamfProPASS" "$jamfProURL$resourceURL/id/$idsToDelete" -X DELETE
 
 echo "Done"
